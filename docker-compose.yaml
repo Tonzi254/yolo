@@ -1,0 +1,52 @@
+version: '3'
+
+networks:
+    yolo-network:
+        external: true
+
+volumes:
+  test-vol:
+
+services:
+
+#frontend microservice
+  frontend:
+    container_name: docker_frontend_week7-ip
+    image: tonzi/node-frontend/app:1.0.1
+    ports:
+      - 3000:3000
+    networks:
+      yolo-network:
+        ipv4_address: 172.20.0.10
+    volumes:
+      - test-vol:/app
+    depends_on:
+      - backend
+
+#backend microservice
+  backend:
+    container_name: docker_backend_week7-ip
+    image: tonzi/node-backend/app:1.0.2
+    networks:
+      yolo-network:
+        ipv4_address: 172.20.0.20
+    environment:
+      PORT: 5000
+      MONGODB_URI: 'mongodb://yolo:yolo123@172.20.0.100:27017'
+    depends_on:
+      - mongodb
+
+#database microservice
+  mongodb:
+    container_name: docker_database_week7-ip
+    image: mongo:latest
+    networks:
+      yolo-network:
+        ipv4_address: 172.20.0.100
+    # ports:
+    #   - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: yolo
+      MONGO_INITDB_ROOT_PASSWORD: yolo123
+    volumes:
+      - test-vol:/data/db
