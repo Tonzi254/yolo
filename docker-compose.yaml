@@ -1,9 +1,7 @@
 version: '3'
 services:
   frontend:
-    build:
-      context: client
-      dockerfile: Dockerfile
+    image: tonzi/yolo-client:1.0.0
     ports:
       - 3000:3000
     stdin_open: true
@@ -13,9 +11,7 @@ services:
       yolo-network:
         ipv4_address: 172.20.0.10
   backend:
-    build:
-      context: backend
-      dockerfile: Dockerfile
+    image: tonzi/yolo-backend:1.0.0
     ports:
       - 5000:5000
     environment:
